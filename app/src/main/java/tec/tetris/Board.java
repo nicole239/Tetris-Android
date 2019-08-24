@@ -3,8 +3,8 @@ package tec.tetris;
 import tec.tetris.Figures.AbstractFigure;
 
 public class Board {
-    public final static int ROW_COUNT = 50;
-    public final static int COLUMN_COUNT = 10;
+    public final static int ROW_COUNT = 18;
+    public final static int COLUMN_COUNT = 11;
     public final static int OCCUPIED_SPACE = 1;
     public final static int FREE_SPACE = -1;
 

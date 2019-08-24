@@ -1,10 +1,12 @@
 package tec.tetris.Figures;
 
+import tec.tetris.BlockColor;
 import tec.tetris.Board;
 
 public abstract class AbstractFigure {
 
     public int[][] coordenates;
+    public BlockColor color;
 
     public abstract void rotate();
     public abstract boolean collidesRotation(int[][] board);

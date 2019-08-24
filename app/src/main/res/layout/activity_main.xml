@@ -6,10 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridLayout">
-    </GridLayout>
+        android:alpha="0"
+        android:onClick="moveDown"
+        android:orientation="vertical"></LinearLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"></GridLayout>
 
 </RelativeLayout>
