@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -32,9 +33,27 @@ public class MainActivity extends AppCompatActivity {
         gridLayout.setRowCount(Board.ROW_COUNT);
         gridLayout.setColumnCount(Board.COLUMN_COUNT);
         createBoard();
+
+        LinearLayout topLayout = findViewById(R.id.topLayout);
+        topLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            public void onSwipeTop() {
+                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeLeft() {
+                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeBottom() {
+                moveDown();
+            }
+        });
+
+
     }
 
-    public void moveDown(View view){
+    public void moveDown(){
         clearBoard();
         nextFigure();
         paintFigure();
