@@ -2,9 +2,9 @@ package tec.tetris.Figures;
 
 import tec.tetris.Board;
 
-public class StickFigure extends AbstractFigure {
+public class IFigure extends AbstractFigure {
 
-    public StickFigure(){
+    public IFigure(){
         coordenates = new int[][] {{1,1},{2,1},{3,1},{4,1}};
     }
 

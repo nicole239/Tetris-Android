@@ -59,8 +59,8 @@ public class TFigure extends AbstractFigure {
                 break;
 
             case 3:
-                if (    board [coordenates[1][0]-1][coordenates[1][1]-1] == Board.OCCUPIED_SPACE &&
-                        board [coordenates[2][0]+1][coordenates[2][1]-1] == Board.OCCUPIED_SPACE &&
+                if (    board [coordenates[1][0]-1][coordenates[1][1]-1] == Board.OCCUPIED_SPACE ||
+                        board [coordenates[2][0]+1][coordenates[2][1]-1] == Board.OCCUPIED_SPACE ||
                         board [coordenates[3][0]+1][coordenates[3][1]+1] == Board.OCCUPIED_SPACE  )
                     return true;
                 break;
