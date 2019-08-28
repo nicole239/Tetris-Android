@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import tec.tetris.Figures.AbstractFigure;
@@ -19,7 +20,7 @@ import tec.tetris.Figures.IFigure;
 
 public class MainActivity extends AppCompatActivity {
     GridLayout gridLayout;
-    Board board;
+    Board tetrisBoard;
     AbstractFigure actualFigure;
 
     @Override
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        board = new Board();
+        tetrisBoard = new Board();
 
         gridLayout = findViewById(R.id.gridLayout);
         gridLayout.setRowCount(Board.ROW_COUNT);
@@ -56,18 +57,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveDown(){
-        if(!actualFigure.collidesDown(board.board)){
+        if(!actualFigure.collidesDown(tetrisBoard.board)){
             eraseFigure();
             actualFigure.moveDown();
             paintFigure();
         }else {
-            board.integrateFigure(actualFigure);
+            tetrisBoard.integrateFigure(actualFigure);
+            checkFullRow();
             nextFigure();
         }
     }
 
     private void moveRight(){
-        if(!actualFigure.collidesRight(board.board)){
+        if(!actualFigure.collidesRight(tetrisBoard.board)){
             eraseFigure();
             actualFigure.moveRight();
             paintFigure();
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveLeft(){
-        if(!actualFigure.collidesLeft(board.board)){
+        if(!actualFigure.collidesLeft(tetrisBoard.board)){
             eraseFigure();
             actualFigure.moveLeft();
             paintFigure();
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void rotate(){
-        if(!actualFigure.collidesRotation(board.board)){
+        if(!actualFigure.collidesRotation(tetrisBoard.board)){
             eraseFigure();
             actualFigure.rotate();
             paintFigure();
@@ -100,6 +102,32 @@ public class MainActivity extends AppCompatActivity {
     private void eraseFigure(){
         for(int[] pair : actualFigure.coordenates){
             paintBlock(pair[1],pair[0],BlockColor.GREY);
+        }
+    }
+
+    private void checkFullRow(){
+        ArrayList<Integer> rows = tetrisBoard.fullRows();
+        if(!rows.isEmpty()) {
+            int points = tetrisBoard.addPoints(rows.size());
+            for(Integer row: rows){
+                eraseRow(row);
+            }
+        }
+
+    }
+
+    private void eraseRow(int erasedRow){
+        for(int row = erasedRow; row > 0; row--) {
+            for (int column = 0; column < Board.COLUMN_COUNT; column++) {
+                if(row == erasedRow) {
+                    tetrisBoard.board[column][row] = Board.FREE_SPACE;
+                    paintBlock(row,column,BlockColor.GREY);
+                }else {
+                    tetrisBoard.board[column][row + 1] = tetrisBoard.board[column][row];
+                    BlockColor color = getBlockColor(row,column);
+                    paintBlock(row+1,column,color);
+                }
+            }
         }
     }
 
@@ -118,8 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
                 if(row == 0 || row == Board.ROW_COUNT-1 || column == 0 || column == Board.COLUMN_COUNT-1){
                     img.setImageResource(R.drawable.black_block);
+                    img.setTag("BLACK");
                 }else{
                     img.setImageResource(R.drawable.grey_block);
+                    img.setTag("GREY");
                 }
 
                 gridLayout.addView(img, new GridLayout.LayoutParams(
@@ -143,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        board.resetBoard();
+        tetrisBoard.resetBoard();
     }
 
     private void paintBlock(int row, int column, BlockColor color ){
@@ -155,32 +185,49 @@ public class MainActivity extends AppCompatActivity {
         switch(color){
             case GREY:
                 imgView.setImageResource(R.drawable.grey_block);
+                imgView.setTag("GREY");
                 break;
             case BLACK:
                 imgView.setImageResource(R.drawable.black_block);
+                imgView.setTag("BLACK");
                 break;
             case RED:
                 imgView.setImageResource(R.drawable.red_block);
+                imgView.setTag("RED");
                 break;
             case GREEN:
                 imgView.setImageResource(R.drawable.green_block);
+                imgView.setTag("GREEN");
                 break;
             case BLUE:
                 imgView.setImageResource(R.drawable.blue_block);
+                imgView.setTag("BLUE");
                 break;
             case LIGHT_BLUE:
                 imgView.setImageResource(R.drawable.light_blue_block);
+                imgView.setTag("LIGHT_BLUE");
                 break;
             case ORANGE:
                 imgView.setImageResource(R.drawable.orange_block);
+                imgView.setTag("ORANGE");
                 break;
             case YELLOW:
                 imgView.setImageResource(R.drawable.yellow_block);
+                imgView.setTag("YELLOW");
                 break;
             case PURPLE:
                 imgView.setImageResource(R.drawable.purple_block);
+                imgView.setTag("PURPLE");
                 break;
         }
 
+    }
+
+    private BlockColor getBlockColor(int row,int column){
+        int index = row*Board.COLUMN_COUNT + column;
+        ImageView imgView = (ImageView)gridLayout.getChildAt(index);
+
+        String colorName = (String)imgView.getTag();
+        return BlockColor.valueOf(colorName);
     }
 }
