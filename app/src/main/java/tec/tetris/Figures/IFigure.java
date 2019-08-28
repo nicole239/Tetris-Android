@@ -11,19 +11,24 @@ public class IFigure extends AbstractFigure {
 
     @Override
     public void rotate() {
-        for(int[] pair : coordenates){
-            int x = pair[0];
-            pair[0] = pair[1];
-            pair[1] = x;
+        int pivot = coordenates[1][(rotation?0:1)];
+        int pivot2 = coordenates[1][(rotation?1:0)] - 1;
+        for(int i=0; i<4;  i++){
+            coordenates[i][(rotation?0:1)] = pivot;
+            coordenates[i][(rotation?1:0)] = pivot2;
+            pivot2 ++;
         }
+        rotation = !rotation;
     }
 
     @Override
     public boolean collidesRotation(int[][] board) {
-        for(int[] pair:coordenates) {
-            if (board[pair[0]][pair[1]] == Board.OCCUPIED_SPACE){
+        int pivot = coordenates[1][(rotation?0:1)];
+        int pivot2 = coordenates[1][(rotation?1:0)] - 1;
+        for(int i=0; i<4;  i++){
+            if (board[(rotation?pivot:pivot2)][(rotation?pivot2:pivot)] == Board.OCCUPIED_SPACE)
                 return true;
-            }
+            pivot2 ++;
         }
         return false;
     }
