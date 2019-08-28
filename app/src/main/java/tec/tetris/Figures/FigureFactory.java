@@ -38,8 +38,10 @@ public class FigureFactory {
                 figure =  new ZFigure();
         }
 
-        for(int i=0; i<rotations; i++){
-            figure.rotate();
+        if(figureNumber!=0) {
+            for (int i = 0; i < rotations; i++) {
+                figure.rotate();
+            }
         }
         figure.color = BlockColor.getRandom();
         return figure;

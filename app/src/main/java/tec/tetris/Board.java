@@ -50,7 +50,7 @@ public class Board {
     public ArrayList<Integer> fullRows(){
         ArrayList<Integer> completedRows = new ArrayList();
         int occupiedSpaces = 0;
-        for(int row = 0; row < ROW_COUNT-1; row++ ){
+        for(int row = 1; row < ROW_COUNT-1; row++ ){
             for(int column = 0; column < COLUMN_COUNT; column++){
 
                 if(board[column][row] == OCCUPIED_SPACE){
@@ -59,9 +59,9 @@ public class Board {
             }
             if(occupiedSpaces == COLUMN_COUNT) {
                 completedRows.add(row);
-            }else{
-                occupiedSpaces = 0;
             }
+            occupiedSpaces = 0;
+
         }
         return completedRows;
     }
