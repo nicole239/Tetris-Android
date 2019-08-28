@@ -1,27 +1,34 @@
 package tec.tetris;
 
-import android.content.Intent;
+import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.logging.LogRecord;
 
 import tec.tetris.Figures.AbstractFigure;
 import tec.tetris.Figures.FigureFactory;
 import tec.tetris.Figures.IFigure;
 
 public class MainActivity extends AppCompatActivity {
+
+    int duration = 1000;
     GridLayout gridLayout;
+    RelativeLayout startScreen;
+    TextView txtMessage;
     Board tetrisBoard;
     AbstractFigure actualFigure;
+    MediaPlayer mediaPlayer;
+    final Handler handler = new Handler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +37,17 @@ public class MainActivity extends AppCompatActivity {
 
         tetrisBoard = new Board();
 
+        startScreen = findViewById(R.id.startScreen);
+        txtMessage = findViewById(R.id.txtMessage);
+
         gridLayout = findViewById(R.id.gridLayout);
         gridLayout.setRowCount(Board.ROW_COUNT);
         gridLayout.setColumnCount(Board.COLUMN_COUNT);
         createBoard();
+
+        mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.tetris_music );
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         LinearLayout topLayout = findViewById(R.id.topLayout);
         topLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
@@ -51,9 +65,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TEMPORAL FOR TESTS
+    }
+
+    private void start(){
+        clearBoard();
         nextFigure();
-        //----------------------
+
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                moveDown();
+                handler.postDelayed(this,duration);
+            }
+        };
+        handler.post(run);
+    }
+
+    public void btnStart_Click(View view){
+        startScreen.setVisibility(View.INVISIBLE);
+        start();
     }
 
     private void moveDown(){
@@ -96,7 +126,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void nextFigure(){
         actualFigure = FigureFactory.getRandomFigure();
-        paintFigure();
+        if(tetrisBoard.collidesTop(actualFigure)){
+            gameover();
+        }else {
+            paintFigure();
+        }
+    }
+
+    private void gameover() {
+        int points = tetrisBoard.getPoints();
+        txtMessage.setText("Points: "+Integer.toString(points));
+        startScreen.setVisibility(View.VISIBLE);
     }
 
     private void eraseFigure(){

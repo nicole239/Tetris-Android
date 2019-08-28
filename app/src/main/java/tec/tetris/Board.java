@@ -38,6 +38,15 @@ public class Board {
         }
     }
 
+    public boolean collidesTop(AbstractFigure figure){
+        for(int[]pair : figure.coordenates){
+            if(board[pair[0]][pair[1]] == OCCUPIED_SPACE){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<Integer> fullRows(){
         ArrayList<Integer> completedRows = new ArrayList();
         int occupiedSpaces = 0;

@@ -18,4 +18,32 @@
         android:layout_width="match_parent"
         android:layout_height="600dp"></GridLayout>
 
+    <RelativeLayout
+        android:id="@+id/startScreen"
+        android:layout_width="270dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:background="#316FA5">
+
+        <TextView
+            android:id="@+id/txtMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="TETRIS"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtMessage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="btnStart_Click"
+            android:text="Start" />
+    </RelativeLayout>
+
 </RelativeLayout>
