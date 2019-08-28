@@ -29,7 +29,7 @@ public abstract class AbstractFigure {
 
     public boolean collidesDown(int[][] board){
         for(int[] pair : coordenates){
-            if( board[pair[0]][pair[1]++] == Board.OCCUPIED_SPACE)
+            if( board[pair[0]][pair[1]+1] == Board.OCCUPIED_SPACE)
                 return true;
         }
         return false;
@@ -37,14 +37,14 @@ public abstract class AbstractFigure {
 
     public boolean collidesLeft(int[][] board){
         for(int[] pair : coordenates){
-            if( board[pair[0]--][pair[1]] == Board.OCCUPIED_SPACE)
+            if( board[pair[0]-1][pair[1]] == Board.OCCUPIED_SPACE)
                 return true;
         }
         return false;
     }
     public boolean collidesRight(int[][] board){
         for(int[] pair : coordenates){
-            if( board[pair[0]++][pair[1]] == Board.OCCUPIED_SPACE)
+            if( board[pair[0]+1][pair[1]] == Board.OCCUPIED_SPACE)
                 return true;
         }
         return false;

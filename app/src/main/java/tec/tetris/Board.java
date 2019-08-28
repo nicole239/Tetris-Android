@@ -11,7 +11,7 @@ public class Board {
     public int[][] board;
 
     public Board(){
-        board = new int[ROW_COUNT][COLUMN_COUNT];
+        board = new int[COLUMN_COUNT][ROW_COUNT];
         resetBoard();
     }
 
@@ -20,9 +20,9 @@ public class Board {
             for(int column = 0; column < COLUMN_COUNT; column++){
 
                 if(row == 0 || row == ROW_COUNT-1 || column == 0 || column == COLUMN_COUNT-1){
-                    board[row][column] = OCCUPIED_SPACE;
+                    board[column][row] = OCCUPIED_SPACE;
                 }else{
-                    board[row][column] = FREE_SPACE;
+                    board[column][row] = FREE_SPACE;
                 }
             }
         }

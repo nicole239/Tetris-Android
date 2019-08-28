@@ -37,36 +37,75 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout topLayout = findViewById(R.id.topLayout);
         topLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeTop() {
-                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+                rotate();
             }
             public void onSwipeRight() {
-                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+                moveRight();
             }
             public void onSwipeLeft() {
-                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+                moveLeft();
             }
             public void onSwipeBottom() {
                 moveDown();
             }
         });
 
-
+        //TEMPORAL FOR TESTS
+        nextFigure();
+        //----------------------
     }
 
-    public void moveDown(){
-        clearBoard();
-        nextFigure();
-        paintFigure();
+    private void moveDown(){
+        if(!actualFigure.collidesDown(board.board)){
+            eraseFigure();
+            actualFigure.moveDown();
+            paintFigure();
+        }else {
+            board.integrateFigure(actualFigure);
+            nextFigure();
+        }
+    }
 
+    private void moveRight(){
+        if(!actualFigure.collidesRight(board.board)){
+            eraseFigure();
+            actualFigure.moveRight();
+            paintFigure();
+        }else{
+            //Add sound effect
+        }
+    }
+
+    private void moveLeft(){
+        if(!actualFigure.collidesLeft(board.board)){
+            eraseFigure();
+            actualFigure.moveLeft();
+            paintFigure();
+        }
+    }
+
+    private void rotate(){
+        if(!actualFigure.collidesRotation(board.board)){
+            eraseFigure();
+            actualFigure.rotate();
+            paintFigure();
+        }
     }
 
     public void nextFigure(){
         actualFigure = FigureFactory.getRandomFigure();
+        paintFigure();
     }
 
-    public void paintFigure(){
+    private void eraseFigure(){
         for(int[] pair : actualFigure.coordenates){
-            paintBlock(pair[0],pair[1],actualFigure.color);
+            paintBlock(pair[1],pair[0],BlockColor.GREY);
+        }
+    }
+
+    private void paintFigure(){
+        for(int[] pair : actualFigure.coordenates){
+            paintBlock(pair[1],pair[0],actualFigure.color);
         }
     }
 
@@ -104,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        board.resetBoard();
     }
 
     private void paintBlock(int row, int column, BlockColor color ){
