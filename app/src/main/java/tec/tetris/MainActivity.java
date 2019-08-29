@@ -13,22 +13,21 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.logging.LogRecord;
 
 import tec.tetris.Figures.AbstractFigure;
 import tec.tetris.Figures.FigureFactory;
-import tec.tetris.Figures.IFigure;
 
 public class MainActivity extends AppCompatActivity {
 
-    int duration = 1000;
+    int speed = 1000;
+    int original_speed;
+    boolean is_going_down = false;
     GridLayout gridLayout;
     RelativeLayout startScreen;
     TextView txtMessage;
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 moveDown();
-                handler.postDelayed(this,duration);
+                handler.postDelayed(this, speed);
             }
         };
 
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                duration = 1000 - i*200;
+                speed = 1000 - i*200;
             }
 
             @Override
@@ -100,22 +99,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
         RelativeLayout topLayout = findViewById(R.id.topLayout);
-        topLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
-            public void onSwipeTop() {
+        topLayout.setOnTouchListener(new OnSwipeTouchListener() {
+            public boolean onSwipeTop() {
                 rotate();
+                return true;
             }
-            public void onSwipeRight() {
+            public boolean onSwipeRight() {
                 moveRight();
+                return true;
             }
-            public void onSwipeLeft() {
+            public boolean onSwipeLeft() {
                 moveLeft();
+                return true;
             }
-            public void onSwipeBottom() {
-                moveDown();
+            public boolean onSwipeBottom() {
+                if(!is_going_down) {
+                    original_speed = speed;
+                    speed = 0;
+                    is_going_down = true;
+                }
+                return true;
             }
         });
 
     }
+
+    public void topLayout_onClick(View view){
+        rotate();
+    }
+
 
     public void btnMenu_Click(View view){
         handler.removeCallbacks(run);
@@ -130,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
         startScreen.setVisibility(View.INVISIBLE);
         ((Button)findViewById(R.id.btnStart)).setText("PLAY");
         (findViewById(R.id.btnContinue)).setVisibility(View.INVISIBLE);
-        handler.postDelayed(run,duration);
+        handler.postDelayed(run, speed);
     }
 
     private void start(){
         clearBoard();
         nextFigure();
-        handler.postDelayed(run,duration);
+        handler.postDelayed(run, speed);
     }
 
     public void btnStart_Click(View view){
@@ -150,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
             actualFigure.moveDown();
             paintFigure();
         }else {
+            if(is_going_down){
+                is_going_down = false;
+                speed = original_speed;
+            }
             tetrisBoard.integrateFigure(actualFigure);
             checkFullRow();
             nextFigure();
