@@ -1,7 +1,11 @@
 package tec.tetris;
 
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     GridLayout gridLayout;
     RelativeLayout startScreen;
     TextView txtMessage;
+    TextView txtPoints;
     Board tetrisBoard;
     AbstractFigure actualFigure;
     MediaPlayer mediaPlayer;
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         startScreen = findViewById(R.id.startScreen);
         txtMessage = findViewById(R.id.txtMessage);
+        txtPoints = findViewById(R.id.txtPoints);
 
         gridLayout = findViewById(R.id.gridLayout);
         gridLayout.setRowCount(Board.ROW_COUNT);
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
-        LinearLayout topLayout = findViewById(R.id.topLayout);
+        RelativeLayout topLayout = findViewById(R.id.topLayout);
         topLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeTop() {
                 rotate();
@@ -149,13 +155,26 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Integer> rows = tetrisBoard.fullRows();
         if(!rows.isEmpty()) {
             int points = tetrisBoard.addPoints(rows.size());
+            txtPoints.setText(String.valueOf(points));
+
             for(Integer row: rows){
                 eraseRow(row);
+                vibrate();
             }
         }
-
     }
 
+    private void vibrate()
+    {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(250, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            //deprecated in API 26
+            v.vibrate(500);
+        }
+    }
     private void eraseRow(int erasedRow){
         for(int row = erasedRow; row > 0; row--) {
             for (int column = 0; column < Board.COLUMN_COUNT; column++) {
@@ -179,6 +198,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void createBoard(){
+        int width = gridLayout.getWidth()/Board.COLUMN_COUNT;
+        int height = gridLayout.getHeight()/Board.ROW_COUNT;
         for(int row = 0; row < Board.ROW_COUNT; row++){
             for(int column = 0; column < Board.COLUMN_COUNT; column++){
 
@@ -189,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                     img.setTag("BLACK");
                 }else{
                     img.setImageResource(R.drawable.grey_block);
+                    img.setAlpha(0.3f);
                     img.setTag("GREY");
                 }
 
@@ -225,37 +247,46 @@ public class MainActivity extends AppCompatActivity {
         switch(color){
             case GREY:
                 imgView.setImageResource(R.drawable.grey_block);
+                imgView.setAlpha(0.3f);
                 imgView.setTag("GREY");
                 break;
             case BLACK:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.black_block);
                 imgView.setTag("BLACK");
                 break;
             case RED:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.red_block);
                 imgView.setTag("RED");
                 break;
             case GREEN:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.green_block);
                 imgView.setTag("GREEN");
                 break;
             case BLUE:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.blue_block);
                 imgView.setTag("BLUE");
                 break;
             case LIGHT_BLUE:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.light_blue_block);
                 imgView.setTag("LIGHT_BLUE");
                 break;
             case ORANGE:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.orange_block);
                 imgView.setTag("ORANGE");
                 break;
             case YELLOW:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.yellow_block);
                 imgView.setTag("YELLOW");
                 break;
             case PURPLE:
+                imgView.setAlpha(1f);
                 imgView.setImageResource(R.drawable.purple_block);
                 imgView.setTag("PURPLE");
                 break;

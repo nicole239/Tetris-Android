@@ -4,19 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgorund"
     tools:context=".MainActivity">
-
-    <LinearLayout
-        android:id="@+id/topLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:orientation="vertical"></LinearLayout>
 
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
-        android:layout_height="600dp"></GridLayout>
+        android:layout_height="match_parent">
+
+    </GridLayout>
+
+    <RelativeLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtPoints"
+            android:layout_width="75dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@id/txtPoints"
+            android:text="Points:"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/startScreen"
