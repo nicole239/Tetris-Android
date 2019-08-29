@@ -9,10 +9,14 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,11 +32,13 @@ public class MainActivity extends AppCompatActivity {
     GridLayout gridLayout;
     RelativeLayout startScreen;
     TextView txtMessage;
+    TextView txtFinalScore;
     TextView txtPoints;
     Board tetrisBoard;
     AbstractFigure actualFigure;
     MediaPlayer mediaPlayer;
     final Handler handler = new Handler();
+    Runnable run;
 
 
     @Override
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         startScreen = findViewById(R.id.startScreen);
         txtMessage = findViewById(R.id.txtMessage);
+        txtFinalScore = findViewById(R.id.txtFinalScore);
         txtPoints = findViewById(R.id.txtPoints);
 
         gridLayout = findViewById(R.id.gridLayout);
@@ -54,6 +61,43 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.tetris_music );
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
+
+        run = new Runnable() {
+            @Override
+            public void run() {
+                moveDown();
+                handler.postDelayed(this,duration);
+            }
+        };
+
+        Switch switchMusic = findViewById(R.id.switchMusic);
+        SeekBar seekBarSpeed = findViewById(R.id.seekBarSpeed);
+
+        switchMusic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    mediaPlayer.start();
+                }else{
+                    mediaPlayer.pause();
+                }
+
+            }
+        });
+
+        seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                duration = 1000 - i*200;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
         RelativeLayout topLayout = findViewById(R.id.topLayout);
         topLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
@@ -73,18 +117,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void btnMenu_Click(View view){
+        handler.removeCallbacks(run);
+        startScreen.setVisibility(View.VISIBLE);
+        txtMessage.setText("TETRIS");
+        txtFinalScore.setText("Points: "+txtPoints.getText());
+        ((Button)findViewById(R.id.btnStart)).setText("RESTART");
+        (findViewById(R.id.btnContinue)).setVisibility(View.VISIBLE);
+    }
+
+    public void btnContinue_Click(View view){
+        startScreen.setVisibility(View.INVISIBLE);
+        ((Button)findViewById(R.id.btnStart)).setText("PLAY");
+        (findViewById(R.id.btnContinue)).setVisibility(View.INVISIBLE);
+        handler.postDelayed(run,duration);
+    }
+
     private void start(){
         clearBoard();
         nextFigure();
-
-        Runnable run = new Runnable() {
-            @Override
-            public void run() {
-                moveDown();
-                handler.postDelayed(this,duration);
-            }
-        };
-        handler.post(run);
+        handler.postDelayed(run,duration);
     }
 
     public void btnStart_Click(View view){
@@ -140,8 +192,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void gameover() {
-        int points = tetrisBoard.getPoints();
-        txtMessage.setText("Points: "+Integer.toString(points));
+        handler.removeCallbacks(run);
+        txtFinalScore.setText("Points: "+txtPoints.getText());
+        txtMessage.setText("GAME OVER");
         startScreen.setVisibility(View.VISIBLE);
     }
 

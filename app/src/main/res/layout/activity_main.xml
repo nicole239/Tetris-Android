@@ -22,7 +22,7 @@
         <TextView
             android:id="@+id/txtPoints"
             android:layout_width="75dp"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:text="0"
             android:textColor="@android:color/white"
@@ -31,18 +31,31 @@
         <TextView
             android:id="@+id/textView2"
             android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@id/txtPoints"
             android:text="Points:"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@id/txtPoints"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="btnMenu_Click"
+            android:text="Menu" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/startScreen"
         android:layout_width="270dp"
-        android:layout_height="200dp"
+        android:layout_height="400dp"
         android:layout_centerInParent="true"
         android:background="#316FA5">
 
@@ -55,16 +68,71 @@
             android:text="TETRIS"
             android:textSize="30sp" />
 
+        <Switch
+            android:id="@+id/switchMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtFinalScore"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:checked="true"
+            android:text="Music"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/lblSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/switchMusic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="Speed"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <SeekBar
+            android:id="@+id/seekBarSpeed"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lblSpeed"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:max="3"
+            android:progress="1" />
+
         <Button
-            android:id="@+id/btnRestart"
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnContinue"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="btnStart_Click"
+            android:text="Start" />
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekBarSpeed"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_green_dark"
+            android:onClick="btnContinue_Click"
+            android:text="Continue"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/txtFinalScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtMessage"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/holo_green_dark"
-            android:onClick="btnStart_Click"
-            android:text="Start" />
+            android:textSize="24sp"
+            android:visibility="visible" />
+
     </RelativeLayout>
 
 </RelativeLayout>
